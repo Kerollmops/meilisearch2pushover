@@ -34,16 +34,21 @@ async fn main() {
                 };
 
                 let uid = value.get("uid").unwrap().as_u64().unwrap();
-                let index_uid = value.get("indexUid").unwrap().as_str().unwrap();
+                let index_uid = value.get("indexUid").and_then(|v| v.as_str());
                 let status = value.get("status").unwrap().as_str().unwrap();
                 let duration: Duration =
                     iso8601::Duration::from_str(value.get("duration").unwrap().as_str().unwrap())
                         .unwrap()
                         .into();
 
-                let message = format!(
-                    "The task {uid} from {index_uid:?} {status} in processing in {duration:.02?}"
-                );
+                let message = match index_uid {
+                    Some(index_uid) => format!(
+                        "The task {uid} from {index_uid:?} {status} in processing in {duration:.02?}"
+                    ),
+                    None => format!(
+                        "The task {uid} {status} in processing in {duration:.02?}"
+                    ),
+                };
 
                 let message = MessageBuilder::new(&pushover_user, &pushover_token, &message)
                     .set_title("A task just finished processing")
