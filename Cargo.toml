@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-axum = "0.7.9"
+axum = "0.8.4"
 flate2 = "1.1.2"
 iso8601 = "0.6.3"
 pushover-rs = "0.3.21"
