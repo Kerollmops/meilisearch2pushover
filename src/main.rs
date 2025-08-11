@@ -34,6 +34,7 @@ async fn main() {
                     }
                 };
 
+                let duration = duration.round(jiff::Unit::Second).unwrap_or(duration);
                 let message_builder = MessageBuilder::new(&PUSHOVER_USER, &PUSHOVER_TOKEN, "");
                 let message_builder = match (
                     index_uid,
@@ -50,17 +51,17 @@ async fn main() {
                     }
                     (Some(index_uid), None, _, Some(indexed_documents)) => {
                         message_builder.set_title(&format!(
-                            "Index {index_uid} {status} {indexed_documents} documents in {duration:#}"
+                            "Index {index_uid} {status} indexing {indexed_documents} documents in {duration:#}"
                         ))
                           .modify_message(&r#type)
                     },
                     (None, _, _, _) => {
-                        message_builder.set_title(&format!("Indexing {status} in {duration:#}"))
+                        message_builder.set_title(&format!("Indexing {status} indexing in {duration:#}"))
                           .modify_message(&r#type)
                     },
                     (Some(index_uid), _, _, _) => {
                         message_builder.set_title(&format!(
-                            "Index {index_uid} {status} in {duration:#}"
+                            "Index {index_uid} {status} indexing in {duration:#}"
                         ))
                           .modify_message(&r#type)
                     }
