@@ -63,23 +63,23 @@ async fn main() {
                     (Some(index_uid), Some(error_message), Some(received_documents), _) => {
                         message_builder
                             .set_title(&format!(
-                                "Index {index_uid} failed indexing {received_documents} documents in {duration:#}"
+                                "Index {index_uid} {status} indexing {received_documents} documents in {duration:#}"
                             ))
                           .modify_message(&format!("{}: {error_message}", r#type))
                     }
                     (Some(index_uid), None, _, Some(indexed_documents)) => {
                         message_builder.set_title(&format!(
-                            "Index {index_uid} finished {status} {indexed_documents} documents in {duration:#}"
+                            "Index {index_uid} {status} {indexed_documents} documents in {duration:#}"
                         ))
                           .modify_message(r#type)
                     },
                     (None, _, _, _) => {
-                        message_builder.set_title(&format!("Indexing finished in {duration:#}"))
+                        message_builder.set_title(&format!("Indexing {status} in {duration:#}"))
                           .modify_message(r#type)
                     },
                     (Some(index_uid), _, _, _) => {
                         message_builder.set_title(&format!(
-                            "Index {index_uid} finished {status} in {duration:#}"
+                            "Index {index_uid} {status} in {duration:#}"
                         ))
                           .modify_message(r#type)
                     }
