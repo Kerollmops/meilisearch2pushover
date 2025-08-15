@@ -1,13 +1,13 @@
 use std::{env, sync::LazyLock};
 
 use axum::{
-    body::{to_bytes, Body},
-    routing::post,
     Router,
+    body::{Body, to_bytes},
+    routing::post,
 };
 use flate2::bufread::GzDecoder;
 use jiff::SignedDuration;
-use pushover_rs::{send_pushover_request, MessageBuilder};
+use pushover_rs::{MessageBuilder, send_pushover_request};
 use serde::Deserialize;
 use serde_json::de::Deserializer;
 use tokio::net::TcpListener;
@@ -45,25 +45,25 @@ async fn main() {
                     (Some(index_uid), Some(error_message), Some(received_documents), _) => {
                         message_builder
                             .set_title(&format!(
-                                "Index {index_uid} {status} indexing {received_documents} documents in {duration:#}"
+                                "Index {index_uid} {status}"
                             ))
-                          .modify_message(&format!("{}: {error_message}", r#type))
+                          .modify_message(&format!("A {} {status} indexing {received_documents} documents in {duration:#}: {error_message}", r#type))
                     }
                     (Some(index_uid), None, _, Some(indexed_documents)) => {
                         message_builder.set_title(&format!(
-                            "Index {index_uid} {status} indexing {indexed_documents} documents in {duration:#}"
+                            "Index {index_uid} {status}"
                         ))
-                          .modify_message(&r#type)
+                          .modify_message(&format!("A {} {status} indexing {indexed_documents} documents in {duration:#}", r#type))
                     },
                     (None, _, _, _) => {
-                        message_builder.set_title(&format!("Indexing {status} indexing in {duration:#}"))
-                          .modify_message(&r#type)
+                        message_builder.set_title(&format!("Task {status}"))
+                          .modify_message(&format!("A {} {status} in {duration:#}", r#type))
                     },
                     (Some(index_uid), _, _, _) => {
                         message_builder.set_title(&format!(
-                            "Index {index_uid} {status} indexing in {duration:#}"
+                            "Index {index_uid} {status}"
                         ))
-                          .modify_message(&r#type)
+                          .modify_message(&format!("A {} {status} indexing in {duration:#}", r#type))
                     }
                 };
 
