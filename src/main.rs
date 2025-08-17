@@ -57,7 +57,7 @@ async fn main() {
                           .modify_message(&format!("A {} {status} indexing {received_documents} documents in {duration:#}: {error_message}", r#type))
                     }
                     (Some(index_uid), None, _, Some(indexed_documents)) => {
-                        let speed = indexed_documents as f64 / duration.as_millis() as f64 / 1000.0;
+                        let speed = indexed_documents as f64 / (duration.as_millis() as f64 / 1000.0);
                         message_builder.set_title(&format!(
                             "Index {index_uid} {status}"
                         ))
